@@ -8,193 +8,425 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
-  --bg: #0a0a0f;
-  --surface: #12121a;
-  --surface2: #1a1a26;
-  --surface3: #22223a;
-  --accent: #6c63ff;
-  --accent2: #ff6584;
-  --accent3: #43e97b;
-  --accent4: #f7971e;
-  --text: #e8e8f0;
-  --text2: #9090b0;
-  --text3: #5a5a7a;
-  --border: rgba(108,99,255,0.2);
+  --bg: #f7f3ee;
+  --surface: #ffffff;
+  --surface2: #f0e8dc;
+  --surface3: #e4d5c2;
+  --accent: #5c3a1e;
+  --accent2: #c0392b;
+  --accent3: #2e7d4f;
+  --accent4: #b05e10;
+  --text: #1a0f05;
+  --text2: #5a3d25;
+  --text3: #96785a;
+  --border: rgba(92,58,30,0.2);
+  --shadow: rgba(92,58,30,0.1);
 }
+
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-serif; min-height:100vh; }
-body::before {
-  content:''; position:fixed; top:-50%; left:-50%; width:200%; height:200%;
-  background: radial-gradient(ellipse at 20% 20%, rgba(108,99,255,0.08) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 80%, rgba(255,101,132,0.06) 0%, transparent 50%);
-  pointer-events:none; z-index:0;
-}
-.app { position:relative; z-index:1; max-width:1400px; margin:0 auto; padding:0 20px 40px; }
 
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+/* Header */
 header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:28px 0 24px; border-bottom:1px solid var(--border); margin-bottom:32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0 24px;
+  border-bottom: 3px solid var(--accent);
+  margin-bottom: 32px;
 }
-.logo { display:flex; align-items:center; gap:12px; }
+
+.logo { display: flex; align-items: center; gap: 14px; }
+
 .logo-icon {
-  width:40px; height:40px;
-  background:linear-gradient(135deg, var(--accent), var(--accent2));
-  border-radius:10px; display:flex; align-items:center; justify-content:center;
-  font-size:18px; box-shadow:0 0 20px rgba(108,99,255,0.4);
+  width: 44px; height: 44px;
+  background: var(--accent);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 4px 12px var(--shadow);
 }
+
 .logo h1 {
-  font-size:20px; font-weight:700;
-  background:linear-gradient(135deg,#fff 0%,var(--accent) 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px;
+  font-size: 20px; font-weight: 900;
+  color: var(--accent);
+  letter-spacing: -0.5px;
 }
-.logo span { font-size:12px; color:var(--text3); font-weight:400; display:block; margin-top:-2px; -webkit-text-fill-color:var(--text3); }
 
-.header-right { display:flex; align-items:center; gap:12px; }
-.date-badge { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text2); background:var(--surface2); padding:6px 14px; border-radius:20px; border:1px solid var(--border); }
+.logo span {
+  font-size: 11px; color: var(--text3);
+  font-weight: 400; display: block; margin-top: 1px;
+}
 
-.view-tabs { display:flex; gap:4px; background:var(--surface); padding:4px; border-radius:12px; border:1px solid var(--border); }
-.view-tab { padding:8px 20px; border-radius:8px; border:none; background:transparent; color:var(--text2); font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; }
-.view-tab.active { background:var(--accent); color:#fff; box-shadow:0 0 16px rgba(108,99,255,0.5); }
+.header-right { display: flex; align-items: center; gap: 12px; }
 
-.stats-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
-.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px 24px; position:relative; overflow:hidden; transition:transform 0.2s; }
-.stat-card:hover { transform:translateY(-2px); }
-.stat-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:3px; }
-.stat-card:nth-child(1)::before { background:linear-gradient(90deg,var(--accent),transparent); }
-.stat-card:nth-child(2)::before { background:linear-gradient(90deg,var(--accent4),transparent); }
-.stat-card:nth-child(3)::before { background:linear-gradient(90deg,var(--accent3),transparent); }
-.stat-card:nth-child(4)::before { background:linear-gradient(90deg,var(--accent2),transparent); }
-.stat-label { font-size:11px; color:var(--text3); font-weight:500; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:8px; }
-.stat-value { font-size:32px; font-weight:900; font-family:'JetBrains Mono',monospace; line-height:1; }
-.stat-card:nth-child(1) .stat-value { color:var(--accent); }
-.stat-card:nth-child(2) .stat-value { color:var(--accent4); }
-.stat-card:nth-child(3) .stat-value { color:var(--accent3); }
-.stat-card:nth-child(4) .stat-value { color:var(--accent2); }
-.stat-sub { font-size:11px; color:var(--text3); margin-top:4px; }
+.date-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: var(--text2);
+  background: var(--surface2);
+  padding: 6px 14px; border-radius: 20px;
+  border: 1px solid var(--border);
+}
 
-.main-layout { display:grid; grid-template-columns:280px 1fr; gap:20px; }
-.sidebar { display:flex; flex-direction:column; gap:16px; }
+.view-tabs {
+  display: flex; gap: 3px;
+  background: var(--surface2);
+  padding: 4px; border-radius: 12px;
+  border: 1px solid var(--border);
+}
 
-.member-list, .quick-cmd { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; }
-.section-title { font-size:11px; font-weight:700; color:var(--text3); letter-spacing:1px; text-transform:uppercase; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
-.section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+.view-tab {
+  padding: 8px 18px; border-radius: 8px;
+  border: none; background: transparent;
+  color: var(--text2);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: all 0.2s;
+}
 
-.member-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; cursor:pointer; transition:all 0.2s; margin-bottom:4px; }
-.member-item:hover, .member-item.active { background:var(--surface2); }
-.member-item.active { border:1px solid var(--border); }
-.avatar { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0; position:relative; }
-.avatar-me { background:linear-gradient(135deg,var(--accent),#a78bfa); color:#fff; }
-.avatar-1 { background:linear-gradient(135deg,var(--accent4),#fbbf24); color:#fff; }
-.avatar-2 { background:linear-gradient(135deg,var(--accent3),#6ee7b7); color:#1a1a1a; }
-.online-dot { position:absolute; bottom:-2px; right:-2px; width:10px; height:10px; background:var(--accent3); border-radius:50%; border:2px solid var(--surface); animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.7;transform:scale(0.9)} }
-.member-info { flex:1; min-width:0; }
-.member-name { font-size:13px; font-weight:600; color:var(--text); }
-.member-role { font-size:11px; color:var(--text3); margin-top:1px; }
-.member-count { background:var(--surface3); color:var(--text2); font-size:11px; font-family:'JetBrains Mono',monospace; padding:2px 7px; border-radius:10px; }
+.view-tab.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px var(--shadow);
+}
 
-.cmd-input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:13px; resize:none; min-height:80px; transition:border-color 0.2s; margin-bottom:10px; }
-.cmd-input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(108,99,255,0.15); }
-.cmd-input::placeholder { color:var(--text3); }
-.cmd-select { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:8px 12px; color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:12px; margin-bottom:10px; cursor:pointer; }
-.cmd-select:focus { outline:none; border-color:var(--accent); }
-.cmd-select option { background:var(--surface2); }
-.btn-send { width:100%; background:linear-gradient(135deg,var(--accent),#8b5cf6); border:none; border-radius:10px; padding:10px; color:#fff; font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 16px rgba(108,99,255,0.3); }
-.btn-send:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(108,99,255,0.5); }
+/* Stats */
+.stats-bar {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 16px; margin-bottom: 28px;
+}
 
-.view-panel { display:none; }
-.view-panel.active { display:block; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
 
-.task-board { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-.task-column { background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
-.column-header { padding:16px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
-.column-title { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--text); }
-.col-dot { width:8px; height:8px; border-radius:50%; }
-.col-dot.todo { background:var(--accent4); box-shadow:0 0 8px rgba(247,151,30,0.5); }
-.col-dot.doing { background:var(--accent); box-shadow:0 0 8px rgba(108,99,255,0.5); }
-.col-dot.done { background:var(--accent3); box-shadow:0 0 8px rgba(67,233,123,0.5); }
-.col-count { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text3); background:var(--surface2); padding:2px 8px; border-radius:10px; }
-.task-list { padding:12px; min-height:200px; display:flex; flex-direction:column; gap:8px; }
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--shadow);
+}
 
-.task-card { background:var(--surface2); border:1px solid transparent; border-radius:12px; padding:14px; cursor:pointer; transition:all 0.2s; animation:slideIn 0.3s ease; }
-@keyframes slideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-.task-card:hover { border-color:var(--border); background:var(--surface3); transform:translateX(2px); }
-.task-card.commander { border-left:3px solid var(--accent2); }
-.task-header { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px; }
-.task-title { font-size:13px; font-weight:600; color:var(--text); line-height:1.4; }
-.task-priority { font-size:10px; font-weight:700; padding:2px 7px; border-radius:6px; flex-shrink:0; }
-.priority-high { background:rgba(255,101,132,0.2); color:var(--accent2); }
-.priority-mid { background:rgba(247,151,30,0.2); color:var(--accent4); }
-.priority-low { background:rgba(108,99,255,0.2); color:#a78bfa; }
-.task-meta { display:flex; align-items:center; gap:8px; margin-top:10px; }
-.task-assignee { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text3); }
-.mini-avatar { width:18px; height:18px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; }
-.task-time { margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); }
-.task-note { font-size:11px; color:var(--text2); line-height:1.5; margin-top:6px; padding-top:8px; border-top:1px solid var(--border); }
-.cmd-badge { font-size:10px; background:rgba(255,101,132,0.15); color:var(--accent2); border:1px solid rgba(255,101,132,0.3); padding:2px 7px; border-radius:6px; }
+.stat-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; width: 5px; height: 100%;
+}
+.stat-card:nth-child(1)::before { background: var(--accent); }
+.stat-card:nth-child(2)::before { background: var(--accent4); }
+.stat-card:nth-child(3)::before { background: var(--accent3); }
+.stat-card:nth-child(4)::before { background: var(--accent2); }
 
-.add-task-btn { width:calc(100% - 24px); margin:0 12px 12px; background:transparent; border:1px dashed var(--border); border-radius:10px; padding:10px; color:var(--text3); font-family:'Noto Sans KR',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:6px; }
-.add-task-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(108,99,255,0.05); }
+.stat-label {
+  font-size: 11px; color: var(--text3);
+  font-weight: 600; letter-spacing: 0.5px;
+  text-transform: uppercase; margin-bottom: 8px;
+}
 
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); z-index:100; align-items:center; justify-content:center; }
-.modal-overlay.open { display:flex; }
-.modal { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:28px; width:480px; max-width:90vw; animation:modalIn 0.25s ease; box-shadow:0 24px 80px rgba(0,0,0,0.5); }
-@keyframes modalIn { from{opacity:0;transform:translateY(16px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
-.modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
-.modal-title { font-size:16px; font-weight:700; color:var(--text); }
-.modal-close { background:var(--surface2); border:none; color:var(--text2); width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
-.modal-close:hover { background:var(--surface3); color:var(--text); }
-.form-group { margin-bottom:16px; }
-.form-label { font-size:11px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:block; }
-.form-input, .form-select, .form-textarea { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:13px; transition:border-color 0.2s; }
-.form-textarea { min-height:80px; resize:none; }
-.form-input:focus, .form-select:focus, .form-textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(108,99,255,0.1); }
-.form-select option { background:var(--surface2); }
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.btn-primary { width:100%; background:linear-gradient(135deg,var(--accent),#8b5cf6); border:none; border-radius:10px; padding:12px; color:#fff; font-family:'Noto Sans KR',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s; margin-top:8px; box-shadow:0 4px 20px rgba(108,99,255,0.4); }
-.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 28px rgba(108,99,255,0.55); }
+.stat-value {
+  font-size: 40px; font-weight: 900;
+  font-family: 'JetBrains Mono', monospace; line-height: 1;
+}
+.stat-card:nth-child(1) .stat-value { color: var(--accent); }
+.stat-card:nth-child(2) .stat-value { color: var(--accent4); }
+.stat-card:nth-child(3) .stat-value { color: var(--accent3); }
+.stat-card:nth-child(4) .stat-value { color: var(--accent2); }
 
-.monitor-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-.monitor-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
-.monitor-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
-.monitor-avatar { width:32px; height:32px; border-radius:8px; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; }
-.monitor-name { font-size:14px; font-weight:700; }
-.monitor-status { font-size:11px; color:var(--text3); }
-.progress-bar { height:3px; background:var(--surface3); }
-.progress-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent3)); transition:width 0.5s ease; box-shadow:0 0 8px rgba(108,99,255,0.5); }
-.monitor-tasks { padding:12px; max-height:320px; overflow-y:auto; }
-.monitor-task { display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:8px; margin-bottom:6px; transition:background 0.2s; }
-.monitor-task:hover { background:var(--surface2); }
-.task-check { width:16px; height:16px; border-radius:4px; border:2px solid var(--border); flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; font-size:10px; }
-.task-check.done { background:var(--accent3); border-color:var(--accent3); color:#1a1a1a; }
-.task-check.doing { background:rgba(108,99,255,0.3); border-color:var(--accent); }
-.monitor-task-info { flex:1; }
-.monitor-task-name { font-size:12px; font-weight:600; color:var(--text); margin-bottom:2px; }
-.monitor-task-note { font-size:11px; color:var(--text2); line-height:1.4; }
-.monitor-task-time { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); flex-shrink:0; }
+.stat-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
 
-.cmd-history { background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; grid-column:1/-1; }
-.cmd-history-list { padding:12px; max-height:200px; overflow-y:auto; }
-.cmd-history-item { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; border-radius:8px; margin-bottom:4px; background:var(--surface2); animation:slideIn 0.3s ease; }
-.cmd-time { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); flex-shrink:0; margin-top:2px; }
-.cmd-content { flex:1; }
-.cmd-to { font-size:11px; color:var(--accent2); font-weight:600; margin-bottom:2px; }
-.cmd-text { font-size:12px; color:var(--text2); line-height:1.4; }
+/* Layout */
+.main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+.member-list, .quick-cmd {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.section-title {
+  font-size: 10px; font-weight: 700;
+  color: var(--text3); letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.member-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 10px;
+  cursor: pointer; transition: all 0.2s; margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+.member-item:hover { background: var(--surface2); }
+.member-item.active { background: var(--surface2); border-color: var(--border); }
+
+.avatar {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0; position: relative;
+}
+.avatar-me { background: var(--accent); color: #fff; }
+.avatar-1 { background: var(--accent4); color: #fff; }
+.avatar-2 { background: var(--accent3); color: #fff; }
+
+.online-dot {
+  position: absolute; bottom: -2px; right: -2px;
+  width: 10px; height: 10px;
+  background: var(--accent3); border-radius: 50%;
+  border: 2px solid var(--surface);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.85)} }
+
+.member-info { flex: 1; min-width: 0; }
+.member-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.member-role { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.member-count {
+  background: var(--surface2); color: var(--text2);
+  font-size: 11px; font-family: 'JetBrains Mono', monospace;
+  padding: 2px 7px; border-radius: 10px;
+}
+
+.cmd-select {
+  width: 100%; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px 12px; color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px; margin-bottom: 10px; cursor: pointer;
+}
+.cmd-select:focus { outline: none; border-color: var(--accent); }
+.cmd-select option { background: #fff; }
+
+.cmd-input {
+  width: 100%; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 14px; color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px; resize: none; min-height: 80px;
+  transition: border-color 0.2s; margin-bottom: 10px;
+}
+.cmd-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,92,58,0.1); }
+.cmd-input::placeholder { color: var(--text3); }
+
+.btn-send {
+  width: 100%; background: var(--accent);
+  border: none; border-radius: 10px; padding: 11px;
+  color: #fff; font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; box-shadow: 0 3px 10px var(--shadow);
+}
+.btn-send:hover { background: #6a4d30; transform: translateY(-1px); }
+
+/* Board */
+.view-panel { display: none; }
+.view-panel.active { display: block; }
+
+.task-board { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+
+.task-column {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.task-column:nth-child(1) { border-top: 3px solid var(--accent4); }
+.task-column:nth-child(2) { border-top: 3px solid var(--accent); }
+.task-column:nth-child(3) { border-top: 3px solid var(--accent3); }
+
+.column-header {
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.column-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--text); }
+
+.col-dot { width: 10px; height: 10px; border-radius: 50%; }
+.col-dot.todo { background: var(--accent4); box-shadow: 0 0 0 3px rgba(176,94,16,0.15); }
+.col-dot.doing { background: var(--accent); box-shadow: 0 0 0 3px rgba(92,58,30,0.15); }
+.col-dot.done { background: var(--accent3); box-shadow: 0 0 0 3px rgba(46,125,79,0.15); }
+
+.col-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text3);
+  background: var(--surface2); padding: 2px 8px; border-radius: 10px;
+}
+
+.task-list {
+  padding: 12px; min-height: 200px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.task-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px;
+  cursor: pointer; transition: all 0.2s;
+  animation: slideIn 0.3s ease;
+}
+@keyframes slideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+.task-card:hover { background: var(--surface3); transform: translateX(2px); }
+.task-card.commander { border-left: 3px solid var(--accent2); }
+
+.task-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.task-title { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.4; }
+
+.task-priority { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; flex-shrink: 0; }
+.priority-high { background: rgba(192,57,43,0.12); color: var(--accent2); }
+.priority-mid { background: rgba(176,125,58,0.12); color: var(--accent4); }
+.priority-low { background: rgba(74,124,89,0.12); color: var(--accent3); }
+
+.task-note { font-size: 11px; color: var(--text2); line-height: 1.5; margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--border); }
+
+.task-meta { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.task-assignee { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
+.mini-avatar { width: 18px; height: 18px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
+.task-time { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text3); }
+
+.cmd-badge {
+  font-size: 10px; background: rgba(192,57,43,0.1);
+  color: var(--accent2); border: 1px solid rgba(192,57,43,0.2);
+  padding: 2px 7px; border-radius: 6px;
+}
+
+.add-task-btn {
+  width: calc(100% - 24px); margin: 0 12px 12px;
+  background: transparent; border: 1px dashed var(--border);
+  border-radius: 10px; padding: 10px; color: var(--text3);
+  font-family: 'Noto Sans KR', sans-serif; font-size: 12px;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.add-task-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(124,92,58,0.05); }
+
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(44,31,14,0.4); backdrop-filter: blur(4px);
+  z-index: 100; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 28px; width: 480px; max-width: 90vw;
+  animation: modalIn 0.25s ease;
+  box-shadow: 0 24px 80px rgba(44,31,14,0.2);
+}
+@keyframes modalIn { from{opacity:0;transform:translateY(12px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.modal-title { font-size: 16px; font-weight: 700; color: var(--text); }
+.modal-close {
+  background: var(--surface2); border: none; color: var(--text2);
+  width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+  font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.modal-close:hover { background: var(--surface3); }
+
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 14px; color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif; font-size: 13px; transition: border-color 0.2s;
+}
+.form-textarea { min-height: 80px; resize: none; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,92,58,0.1); }
+.form-select option { background: #fff; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.btn-primary {
+  width: 100%; background: var(--accent);
+  border: none; border-radius: 10px; padding: 12px;
+  color: #fff; font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; margin-top: 8px;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+.btn-primary:hover { background: #6a4d30; transform: translateY(-1px); }
+
+/* Monitor */
+.monitor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.monitor-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.monitor-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.monitor-avatar { width: 32px; height: 32px; border-radius: 8px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.monitor-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.monitor-status { font-size: 11px; color: var(--text3); }
+
+.progress-bar { height: 4px; background: var(--surface2); }
+.progress-fill { height: 100%; background: var(--accent); transition: width 0.5s ease; }
+
+.monitor-tasks { padding: 12px; max-height: 320px; overflow-y: auto; }
+.monitor-task { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border-radius: 8px; margin-bottom: 6px; transition: background 0.2s; }
+.monitor-task:hover { background: var(--surface2); }
+
+.task-check { width: 16px; height: 16px; border-radius: 4px; border: 2px solid var(--border); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+.task-check.done { background: var(--accent3); border-color: var(--accent3); color: #fff; }
+.task-check.doing { background: rgba(124,92,58,0.2); border-color: var(--accent); }
+
+.monitor-task-info { flex: 1; }
+.monitor-task-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.monitor-task-note { font-size: 11px; color: var(--text2); line-height: 1.4; }
+.monitor-task-time { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text3); flex-shrink: 0; }
+
+.cmd-history { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; grid-column: 1/-1; box-shadow: 0 2px 8px var(--shadow); }
+.cmd-history-list { padding: 12px; max-height: 200px; overflow-y: auto; }
+.cmd-history-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 8px; margin-bottom: 4px; background: var(--surface2); }
+.cmd-time { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text3); flex-shrink: 0; margin-top: 2px; }
+.cmd-content { flex: 1; }
+.cmd-to { font-size: 11px; color: var(--accent); font-weight: 700; margin-bottom: 2px; }
+.cmd-text { font-size: 12px; color: var(--text2); line-height: 1.4; }
 
 /* Loading */
-.loading-overlay { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; gap:16px; }
-.loading-spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
+.loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; gap: 16px; }
+.loading-spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg)} }
-.loading-text { font-size:13px; color:var(--text3); }
+.loading-text { font-size: 13px; color: var(--text3); }
 
-::-webkit-scrollbar { width:4px; }
-::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:var(--surface3); border-radius:4px; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 4px; }
 
-.toast { position:fixed; bottom:24px; right:24px; background:var(--surface); border:1px solid var(--accent); border-radius:12px; padding:14px 20px; font-size:13px; color:var(--text); box-shadow:0 8px 32px rgba(0,0,0,0.4); z-index:200; display:none; animation:toastIn 0.3s ease; }
-@keyframes toastIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--accent); border-radius: 12px;
+  padding: 14px 20px; font-size: 13px; color: #fff;
+  box-shadow: 0 8px 24px var(--shadow); z-index: 200;
+  display: none; animation: toastIn 0.3s ease;
+}
+@keyframes toastIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
-.sync-dot { width:8px; height:8px; border-radius:50%; background:var(--accent3); animation:pulse 2s infinite; display:inline-block; margin-right:6px; }
+.sync-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--accent3);
+}
+.sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent3); animation: pulse 2s infinite; }
 
 @media(max-width:900px) {
   .main-layout{grid-template-columns:1fr}
@@ -206,7 +438,6 @@ header {
 </head>
 <body>
 
-<!-- Loading -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-spinner"></div>
   <div class="loading-text">데이터 불러오는 중...</div>
@@ -218,7 +449,7 @@ header {
       <div class="logo-icon">🚀</div>
       <div>
         <h1>하루한보 업무관리</h1>
-        <span><span class="sync-dot"></span>실시간 공유 중</span>
+        <span class="sync-badge"><span class="sync-dot"></span>실시간 공유 중</span>
       </div>
     </div>
     <div class="header-right">
@@ -302,18 +533,18 @@ header {
             <div class="monitor-header">
               <div class="monitor-avatar avatar-1">직1</div>
               <div><div class="monitor-name">직원 1</div><div class="monitor-status">콘텐츠 담당</div></div>
-              <div style="margin-left:auto;text-align:right;"><div style="font-size:20px;font-weight:900;color:var(--accent4);font-family:'JetBrains Mono',monospace;" id="mon1-rate">0%</div><div style="font-size:10px;color:var(--text3);">완료율</div></div>
+              <div style="margin-left:auto;text-align:right;"><div style="font-size:22px;font-weight:900;color:var(--accent4);font-family:'JetBrains Mono',monospace;" id="mon1-rate">0%</div><div style="font-size:10px;color:var(--text3);">완료율</div></div>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="mon1-bar" style="width:0%"></div></div>
+            <div class="progress-bar"><div class="progress-fill" id="mon1-bar" style="width:0%;background:var(--accent4);"></div></div>
             <div class="monitor-tasks" id="mon1-tasks"></div>
           </div>
           <div class="monitor-card">
             <div class="monitor-header">
               <div class="monitor-avatar avatar-2">직2</div>
               <div><div class="monitor-name">직원 2</div><div class="monitor-status">운영 담당</div></div>
-              <div style="margin-left:auto;text-align:right;"><div style="font-size:20px;font-weight:900;color:var(--accent3);font-family:'JetBrains Mono',monospace;" id="mon2-rate">0%</div><div style="font-size:10px;color:var(--text3);">완료율</div></div>
+              <div style="margin-left:auto;text-align:right;"><div style="font-size:22px;font-weight:900;color:var(--accent3);font-family:'JetBrains Mono',monospace;" id="mon2-rate">0%</div><div style="font-size:10px;color:var(--text3);">완료율</div></div>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="mon2-bar" style="width:0%"></div></div>
+            <div class="progress-bar"><div class="progress-fill" id="mon2-bar" style="width:0%;background:var(--accent3);"></div></div>
             <div class="monitor-tasks" id="mon2-tasks"></div>
           </div>
           <div class="cmd-history">
@@ -326,7 +557,7 @@ header {
   </div>
 </div>
 
-<!-- Add Task Modal -->
+<!-- Add Modal -->
 <div class="modal-overlay" id="addModal">
   <div class="modal">
     <div class="modal-header"><div class="modal-title">📝 업무 등록</div><button class="modal-close" onclick="closeModal('addModal')">✕</button></div>
@@ -353,28 +584,17 @@ header {
 <div class="toast" id="toast"></div>
 
 <script>
-// =============================================
-// ⚙️ Supabase 설정 (자동 입력됨)
-// =============================================
 const SUPABASE_URL = 'https://zbqpfkpsqrknwbfxtwfx.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_OZmmr1rN-7fBbp1P2tFT7w_rR4VK4zC';
-
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// =============================================
-let tasks = [];
-let commands = [];
-let currentFilter = 'all';
-let addTarget = 'todo';
-let completeTargetId = null;
+let tasks = [], commands = [], currentFilter = 'all', addTarget = 'todo', completeTargetId = null;
 
 async function init() {
   const now = new Date();
   const days = ['일','월','화','수','목','금','토'];
-  document.getElementById('dateDisplay').textContent =
-    `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} (${days[now.getDay()]})`;
-
+  document.getElementById('dateDisplay').textContent = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} (${days[now.getDay()]})`;
   await loadTasks();
   await loadCommands();
   subscribeRealtime();
@@ -383,33 +603,23 @@ async function init() {
 
 async function loadTasks() {
   const { data, error } = await db.from('tasks').select('*').order('created_at', { ascending: false });
-  if (error) { console.error(error); showToast('❗ 데이터 로드 실패. SQL 설정을 확인하세요.'); return; }
+  if (error) { showToast('❗ 데이터 로드 실패'); return; }
   tasks = data || [];
   renderAll();
 }
 
 async function loadCommands() {
-  const { data, error } = await db.from('commands').select('*').order('created_at', { ascending: false }).limit(20);
-  if (error) return;
+  const { data } = await db.from('commands').select('*').order('created_at', { ascending: false }).limit(20);
   commands = data || [];
   renderCmdHistory();
 }
 
 function subscribeRealtime() {
-  db.channel('tasks-channel')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => loadTasks())
-    .subscribe();
-  db.channel('commands-channel')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'commands' }, () => loadCommands())
-    .subscribe();
+  db.channel('tasks-ch').on('postgres_changes', { event:'*', schema:'public', table:'tasks' }, () => loadTasks()).subscribe();
+  db.channel('commands-ch').on('postgres_changes', { event:'*', schema:'public', table:'commands' }, () => loadCommands()).subscribe();
 }
 
-function renderAll() {
-  renderBoard();
-  renderMonitor();
-  renderStats();
-  renderCounts();
-}
+function renderAll() { renderBoard(); renderMonitor(); renderStats(); renderCounts(); }
 
 function renderBoard() {
   const filtered = currentFilter === 'all' ? tasks : tasks.filter(t => t.assignee === currentFilter);
@@ -419,7 +629,7 @@ function renderBoard() {
     const items = filtered.filter(t => t.status === status);
     cnt.textContent = items.length;
     col.innerHTML = items.length === 0
-      ? `<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">없음</div>`
+      ? `<div style="text-align:center;padding:24px;color:var(--text3);font-size:12px;">없음</div>`
       : items.map(taskCardHTML).join('');
   });
 }
@@ -427,187 +637,109 @@ function renderBoard() {
 function taskCardHTML(t) {
   const avatarClass = t.assignee === '나' ? 'avatar-me' : t.assignee === '직원1' ? 'avatar-1' : 'avatar-2';
   const avatarLabel = t.assignee === '나' ? '나' : t.assignee === '직원1' ? '직1' : '직2';
-  const priorityClass = {high:'priority-high',mid:'priority-mid',low:'priority-low'}[t.priority] || 'priority-mid';
-  const priorityLabel = {high:'높음',mid:'보통',low:'낮음'}[t.priority] || '보통';
-  const time = t.task_time || '';
-
+  const priorityClass = {high:'priority-high',mid:'priority-mid',low:'priority-low'}[t.priority]||'priority-mid';
+  const priorityLabel = {high:'높음',mid:'보통',low:'낮음'}[t.priority]||'보통';
   let actions = '';
-  if (t.status === 'todo') actions = `<button onclick="moveTask('${t.id}','doing')" style="background:rgba(108,99,255,0.2);border:none;color:var(--accent);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">▶ 시작</button>`;
-  else if (t.status === 'doing') actions = `<button onclick="openCompleteModal('${t.id}')" style="background:rgba(67,233,123,0.2);border:none;color:var(--accent3);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">✓ 완료</button>`;
-
-  return `<div class="task-card${t.from_command ? ' commander' : ''}">
+  if (t.status === 'todo') actions = `<button onclick="moveTask('${t.id}','doing')" style="background:rgba(124,92,58,0.12);border:none;color:var(--accent);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;">▶ 시작</button>`;
+  else if (t.status === 'doing') actions = `<button onclick="openCompleteModal('${t.id}')" style="background:rgba(74,124,89,0.12);border:none;color:var(--accent3);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;">✓ 완료</button>`;
+  return `<div class="task-card${t.from_command?' commander':''}">
     <div class="task-header"><div class="task-title">${t.title}</div><div class="task-priority ${priorityClass}">${priorityLabel}</div></div>
-    ${t.description ? `<div style="font-size:11px;color:var(--text3);margin-bottom:6px;">${t.description}</div>` : ''}
-    ${t.complete_note ? `<div class="task-note">📝 ${t.complete_note}</div>` : ''}
-    ${t.from_command ? `<div style="margin-top:6px;"><span class="cmd-badge">📢 지시 업무</span></div>` : ''}
+    ${t.description?`<div style="font-size:11px;color:var(--text3);margin-bottom:4px;">${t.description}</div>`:''}
+    ${t.complete_note?`<div class="task-note">📝 ${t.complete_note}</div>`:''}
+    ${t.from_command?`<div style="margin-top:6px;"><span class="cmd-badge">📢 지시 업무</span></div>`:''}
     <div class="task-meta">
       <div class="task-assignee"><div class="mini-avatar ${avatarClass}">${avatarLabel}</div>${t.assignee}</div>
-      <div class="task-time">${time}</div>
+      <div class="task-time">${t.task_time||''}</div>
       ${actions}
-      <button onclick="deleteTask('${t.id}')" style="background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:2px 6px;border-radius:4px;" title="삭제">✕</button>
+      <button onclick="deleteTask('${t.id}')" style="background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:2px 6px;" title="삭제">✕</button>
     </div>
   </div>`;
 }
 
 function renderStats() {
-  const total = tasks.length;
-  const doing = tasks.filter(t => t.status === 'doing').length;
-  const done = tasks.filter(t => t.status === 'done').length;
-  const rate = total > 0 ? Math.round(done/total*100) : 0;
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statDoing').textContent = doing;
-  document.getElementById('statDone').textContent = done;
-  document.getElementById('statRate').textContent = rate + '%';
+  const total=tasks.length, done=tasks.filter(t=>t.status==='done').length, doing=tasks.filter(t=>t.status==='doing').length;
+  document.getElementById('statTotal').textContent=total;
+  document.getElementById('statDoing').textContent=doing;
+  document.getElementById('statDone').textContent=done;
+  document.getElementById('statRate').textContent=(total>0?Math.round(done/total*100):0)+'%';
 }
 
 function renderCounts() {
-  document.getElementById('cnt-all').textContent = tasks.length;
-  ['나','직원1','직원2'].forEach(name => {
-    const el = document.getElementById(`cnt-${name}`);
-    if (el) el.textContent = tasks.filter(t => t.assignee === name).length;
-  });
+  document.getElementById('cnt-all').textContent=tasks.length;
+  ['나','직원1','직원2'].forEach(n=>{const el=document.getElementById(`cnt-${n}`);if(el)el.textContent=tasks.filter(t=>t.assignee===n).length;});
 }
 
 function renderMonitor() {
-  ['직원1','직원2'].forEach((member, i) => {
-    const idx = i + 1;
-    const myTasks = tasks.filter(t => t.assignee === member);
-    const done = myTasks.filter(t => t.status === 'done').length;
-    const rate = myTasks.length > 0 ? Math.round(done/myTasks.length*100) : 0;
-    document.getElementById(`mon${idx}-rate`).textContent = rate + '%';
-    document.getElementById(`mon${idx}-bar`).style.width = rate + '%';
-    const container = document.getElementById(`mon${idx}-tasks`);
-    container.innerHTML = myTasks.length === 0
-      ? `<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">등록된 업무 없음</div>`
-      : myTasks.map(t => {
-          const checkClass = t.status === 'done' ? 'done' : t.status === 'doing' ? 'doing' : '';
-          const checkIcon = t.status === 'done' ? '✓' : t.status === 'doing' ? '●' : '';
-          return `<div class="monitor-task">
-            <div class="task-check ${checkClass}">${checkIcon}</div>
-            <div class="monitor-task-info">
-              <div class="monitor-task-name">${t.title}</div>
-              ${t.complete_note ? `<div class="monitor-task-note">${t.complete_note}</div>` : ''}
-            </div>
-            <div class="monitor-task-time">${t.task_time||''}</div>
-          </div>`;
-        }).join('');
+  ['직원1','직원2'].forEach((m,i)=>{
+    const idx=i+1, mt=tasks.filter(t=>t.assignee===m), done=mt.filter(t=>t.status==='done').length;
+    const rate=mt.length>0?Math.round(done/mt.length*100):0;
+    document.getElementById(`mon${idx}-rate`).textContent=rate+'%';
+    document.getElementById(`mon${idx}-bar`).style.width=rate+'%';
+    const c=document.getElementById(`mon${idx}-tasks`);
+    c.innerHTML=mt.length===0?`<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">등록된 업무 없음</div>`:mt.map(t=>{
+      const cc=t.status==='done'?'done':t.status==='doing'?'doing':'';
+      const ci=t.status==='done'?'✓':t.status==='doing'?'●':'';
+      return `<div class="monitor-task"><div class="task-check ${cc}">${ci}</div><div class="monitor-task-info"><div class="monitor-task-name">${t.title}</div>${t.complete_note?`<div class="monitor-task-note">${t.complete_note}</div>`:''}</div><div class="monitor-task-time">${t.task_time||''}</div></div>`;
+    }).join('');
   });
 }
 
 function renderCmdHistory() {
-  const container = document.getElementById('cmdHistory');
-  if (!commands.length) { container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">아직 지시 내역이 없습니다</div>`; return; }
-  container.innerHTML = commands.map(c => `
-    <div class="cmd-history-item">
-      <div class="cmd-time">${c.cmd_time||''}</div>
-      <div class="cmd-content"><div class="cmd-to">→ ${c.target}</div><div class="cmd-text">${c.content}</div></div>
-    </div>`).join('');
+  const c=document.getElementById('cmdHistory');
+  if(!commands.length){c.innerHTML=`<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">아직 지시 내역이 없습니다</div>`;return;}
+  c.innerHTML=commands.map(cmd=>`<div class="cmd-history-item"><div class="cmd-time">${cmd.cmd_time||''}</div><div class="cmd-content"><div class="cmd-to">→ ${cmd.target}</div><div class="cmd-text">${cmd.content}</div></div></div>`).join('');
 }
 
-function openAddModal(status) {
-  addTarget = status;
-  document.getElementById('taskTitle').value = '';
-  document.getElementById('taskDesc').value = '';
-  document.getElementById('addModal').classList.add('open');
-  setTimeout(() => document.getElementById('taskTitle').focus(), 100);
+function openAddModal(s){addTarget=s;document.getElementById('taskTitle').value='';document.getElementById('taskDesc').value='';document.getElementById('addModal').classList.add('open');setTimeout(()=>document.getElementById('taskTitle').focus(),100);}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+async function addTask(){
+  const title=document.getElementById('taskTitle').value.trim();
+  if(!title){showToast('❗ 업무 제목을 입력하세요');return;}
+  const now=new Date(), time=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const{error}=await db.from('tasks').insert({title,assignee:document.getElementById('taskAssignee').value,priority:document.getElementById('taskPriority').value,status:addTarget,description:document.getElementById('taskDesc').value.trim(),task_time:time,from_command:false});
+  if(error){showToast('❗ 등록 실패: '+error.message);return;}
+  closeModal('addModal');showToast('✅ 업무가 등록되었습니다');
 }
 
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+async function moveTask(id,status){await db.from('tasks').update({status}).eq('id',id);}
 
-async function addTask() {
-  const title = document.getElementById('taskTitle').value.trim();
-  if (!title) { showToast('❗ 업무 제목을 입력하세요'); return; }
-  const now = new Date();
-  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  const { error } = await db.from('tasks').insert({
-    title,
-    assignee: document.getElementById('taskAssignee').value,
-    priority: document.getElementById('taskPriority').value,
-    status: addTarget,
-    description: document.getElementById('taskDesc').value.trim(),
-    task_time: time,
-    from_command: false
-  });
-  if (error) { showToast('❗ 등록 실패: ' + error.message); return; }
-  closeModal('addModal');
-  showToast('✅ 업무가 등록되었습니다');
-}
-
-async function moveTask(id, status) {
-  await db.from('tasks').update({ status }).eq('id', id);
-}
-
-function openCompleteModal(id) {
-  completeTargetId = id;
-  const t = tasks.find(t => String(t.id) === String(id));
-  document.getElementById('completeTaskName').value = t?.title || '';
-  document.getElementById('completeNote').value = '';
+function openCompleteModal(id){
+  completeTargetId=id;
+  const t=tasks.find(t=>String(t.id)===String(id));
+  document.getElementById('completeTaskName').value=t?.title||'';
+  document.getElementById('completeNote').value='';
   document.getElementById('completeModal').classList.add('open');
-  setTimeout(() => document.getElementById('completeNote').focus(), 100);
+  setTimeout(()=>document.getElementById('completeNote').focus(),100);
 }
 
-async function completeTask() {
-  const note = document.getElementById('completeNote').value.trim();
-  if (!note) { showToast('❗ 완료 내용을 입력하세요'); return; }
-  const { error } = await db.from('tasks').update({ status: 'done', complete_note: note }).eq('id', completeTargetId);
-  if (error) { showToast('❗ 오류: ' + error.message); return; }
-  closeModal('completeModal');
-  showToast('🎉 업무 완료 보고 완료!');
+async function completeTask(){
+  const note=document.getElementById('completeNote').value.trim();
+  if(!note){showToast('❗ 완료 내용을 입력하세요');return;}
+  await db.from('tasks').update({status:'done',complete_note:note}).eq('id',completeTargetId);
+  closeModal('completeModal');showToast('🎉 완료 보고 제출!');
 }
 
-async function deleteTask(id) {
-  if (!confirm('업무를 삭제하시겠습니까?')) return;
-  await db.from('tasks').delete().eq('id', id);
+async function deleteTask(id){if(!confirm('삭제하시겠습니까?'))return;await db.from('tasks').delete().eq('id',id);}
+
+async function sendCommand(){
+  const to=document.getElementById('cmdTarget').value, text=document.getElementById('cmdText').value.trim();
+  if(!to){showToast('❗ 대상을 선택하세요');return;}
+  if(!text){showToast('❗ 지시 내용을 입력하세요');return;}
+  const now=new Date(), time=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  await db.from('commands').insert({target:to,content:text,cmd_time:time});
+  if(to!=='전체') await db.from('tasks').insert({title:text.length>40?text.slice(0,40)+'...':text,assignee:to,priority:'high',status:'todo',description:text,task_time:time,from_command:true});
+  document.getElementById('cmdText').value='';
+  showToast(`📢 ${to}에게 지시 완료`);
 }
 
-async function sendCommand() {
-  const to = document.getElementById('cmdTarget').value;
-  const text = document.getElementById('cmdText').value.trim();
-  if (!to) { showToast('❗ 대상을 선택하세요'); return; }
-  if (!text) { showToast('❗ 지시 내용을 입력하세요'); return; }
-  const now = new Date();
-  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+function filterMember(m,el){currentFilter=m;document.querySelectorAll('.member-item').forEach(e=>e.classList.remove('active'));el.classList.add('active');renderBoard();}
+function switchView(v,el){document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.view-panel').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById(`view-${v}`).classList.add('active');}
 
-  await db.from('commands').insert({ target: to, content: text, cmd_time: time });
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2500);}
 
-  if (to !== '전체') {
-    await db.from('tasks').insert({
-      title: text.length > 40 ? text.slice(0,40)+'...' : text,
-      assignee: to, priority: 'high', status: 'todo',
-      description: text, task_time: time, from_command: true
-    });
-  }
-  document.getElementById('cmdText').value = '';
-  showToast(`📢 ${to}에게 지시 발송 완료`);
-}
-
-function filterMember(member, el) {
-  currentFilter = member;
-  document.querySelectorAll('.member-item').forEach(e => e.classList.remove('active'));
-  el.classList.add('active');
-  renderBoard();
-}
-
-function switchView(view, el) {
-  document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById(`view-${view}`).classList.add('active');
-}
-
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.style.display = 'block';
-  setTimeout(() => { toast.style.display = 'none'; }, 2500);
-}
-
-document.querySelectorAll('.modal-overlay').forEach(o => {
-  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
-});
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
-});
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open'));});
 
 init();
 </script>
