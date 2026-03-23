@@ -51,15 +51,21 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 .stat-card:nth-child(4) .stat-value { color:var(--accent2); }
 .stat-sub { font-size:11px; color:var(--text3); margin-top:4px; }
 
-.filter-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.filter-tabs { display:flex; gap:6px; }
+.filter-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; gap:12px; flex-wrap:wrap; }
+.filter-tabs { display:flex; gap:6px; flex-wrap:wrap; }
 .filter-tab { padding:8px 16px; border-radius:20px; border:1px solid var(--border); background:var(--surface); color:var(--text2); font-family:'Noto Sans KR',sans-serif; font-size:12px; font-weight:500; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:6px; }
 .filter-tab:hover { border-color:var(--accent); color:var(--accent); }
 .filter-tab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
 .filter-count { font-family:'JetBrains Mono',monospace; font-size:10px; background:rgba(255,255,255,0.25); padding:1px 5px; border-radius:8px; }
 .filter-tab:not(.active) .filter-count { background:var(--surface2); color:var(--text3); }
+
+.btn-group { display:flex; gap:8px; align-items:center; }
 .btn-add-task { background:var(--accent); border:none; border-radius:10px; padding:10px 20px; color:#fff; font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; box-shadow:0 3px 10px var(--shadow); }
 .btn-add-task:hover { background:#4a2e18; transform:translateY(-1px); }
+.btn-history { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 16px; color:var(--text2); font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-history:hover { border-color:var(--accent); color:var(--accent); }
+.btn-clear { background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.25); border-radius:10px; padding:10px 16px; color:var(--accent2); font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; }
+.btn-clear:hover { background:var(--accent2); color:#fff; }
 
 .task-board { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
 .task-column { background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:0 2px 8px var(--shadow); }
@@ -76,6 +82,11 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 .task-column:nth-child(1) .col-count { background:var(--accent4); }
 .task-column:nth-child(2) .col-count { background:var(--accent); }
 .task-column:nth-child(3) .col-count { background:var(--accent3); }
+
+/* 완료 컬럼 헤더 액션 */
+.done-header-actions { display:flex; align-items:center; gap:8px; }
+.btn-clear-done { background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.2); color:var(--accent2); padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; font-family:'Noto Sans KR',sans-serif; transition:all 0.2s; }
+.btn-clear-done:hover { background:var(--accent2); color:#fff; }
 
 .task-list { padding:12px; min-height:240px; display:flex; flex-direction:column; gap:8px; }
 .task-card { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:14px; transition:all 0.2s; animation:slideIn 0.3s ease; }
@@ -105,9 +116,11 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 .add-task-btn { width:calc(100% - 24px); margin:0 12px 12px; background:transparent; border:1px dashed var(--border); border-radius:10px; padding:10px; color:var(--text3); font-family:'Noto Sans KR',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:6px; }
 .add-task-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(92,58,30,0.04); }
 
+/* Modal */
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(26,15,5,0.45); backdrop-filter:blur(4px); z-index:100; align-items:center; justify-content:center; }
 .modal-overlay.open { display:flex; }
-.modal { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:28px; width:480px; max-width:90vw; animation:modalIn 0.25s ease; box-shadow:0 24px 80px rgba(26,15,5,0.2); }
+.modal { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:28px; width:520px; max-width:95vw; animation:modalIn 0.25s ease; box-shadow:0 24px 80px rgba(26,15,5,0.2); }
+.modal-lg { width:720px; }
 @keyframes modalIn { from{opacity:0;transform:translateY(12px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
 .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
 .modal-title { font-size:17px; font-weight:900; color:var(--text); }
@@ -123,6 +136,25 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 .btn-primary { width:100%; background:var(--accent); border:none; border-radius:10px; padding:12px; color:#fff; font-family:'Noto Sans KR',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s; margin-top:8px; box-shadow:0 4px 12px var(--shadow); }
 .btn-primary:hover { background:#4a2e18; transform:translateY(-1px); }
 
+/* 히스토리 모달 */
+.history-tabs { display:flex; gap:4px; margin-bottom:20px; background:var(--surface2); padding:4px; border-radius:10px; }
+.history-tab { flex:1; padding:8px; border-radius:7px; border:none; background:transparent; color:var(--text2); font-family:'Noto Sans KR',sans-serif; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.2s; text-align:center; }
+.history-tab.active { background:var(--accent); color:#fff; }
+
+.history-list { max-height:380px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; }
+.history-item { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 14px; }
+.history-item-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.history-item-title { font-size:13px; font-weight:700; color:var(--text); }
+.history-item-time { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); }
+.history-item-note { font-size:12px; color:var(--text2); line-height:1.5; padding:6px 8px; background:rgba(46,125,79,0.06); border-radius:6px; border-left:3px solid var(--accent3); }
+.history-empty { text-align:center; padding:32px; color:var(--text3); font-size:13px; }
+
+.history-footer { margin-top:16px; display:flex; gap:8px; }
+.btn-danger { flex:1; background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.25); color:var(--accent2); border-radius:10px; padding:11px; font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; }
+.btn-danger:hover { background:var(--accent2); color:#fff; }
+.btn-secondary { flex:1; background:var(--surface2); border:1px solid var(--border); color:var(--text2); border-radius:10px; padding:11px; font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+
 .loading-overlay { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; gap:16px; }
 .loading-spinner { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg)} }
@@ -134,7 +166,6 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 @media(max-width:800px) {
   .stats-bar{grid-template-columns:repeat(2,1fr)}
   .task-board{grid-template-columns:1fr}
-  .filter-bar{flex-direction:column;gap:12px;align-items:flex-start}
 }
 </style>
 </head>
@@ -167,11 +198,15 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
   <div class="filter-bar">
     <div class="filter-tabs">
       <button class="filter-tab active" onclick="filterMember('all',this)">전체 <span class="filter-count" id="cnt-all">0</span></button>
-      <button class="filter-tab" onclick="filterMember('나',this)">👑 나 <span class="filter-count" id="cnt-나">0</span></button>
-      <button class="filter-tab" onclick="filterMember('직원1',this)">직원 1 <span class="filter-count" id="cnt-직원1">0</span></button>
-      <button class="filter-tab" onclick="filterMember('직원2',this)">직원 2 <span class="filter-count" id="cnt-직원2">0</span></button>
+      <button class="filter-tab" onclick="filterMember('이동영',this)">👑 이동영 <span class="filter-count" id="cnt-이동영">0</span></button>
+      <button class="filter-tab" onclick="filterMember('임동석',this)">임동석 <span class="filter-count" id="cnt-임동석">0</span></button>
+      <button class="filter-tab" onclick="filterMember('조세은',this)">조세은 <span class="filter-count" id="cnt-조세은">0</span></button>
     </div>
-    <button class="btn-add-task" onclick="openAddModal('todo')">＋ 업무 추가</button>
+    <div class="btn-group">
+      <button class="btn-history" onclick="openHistoryModal()">📋 완료 내역</button>
+      <button class="btn-clear" onclick="clearDoneTasks()">🔄 일일 완료 목록 초기화</button>
+      <button class="btn-add-task" onclick="openAddModal('todo')">＋ 업무 추가</button>
+    </div>
   </div>
 
   <div class="task-board">
@@ -186,7 +221,13 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
       <button class="add-task-btn" onclick="openAddModal('doing')">＋ 업무 추가</button>
     </div>
     <div class="task-column">
-      <div class="column-header"><div class="column-title"><div class="col-dot done"></div>완료</div><div class="col-count" id="col-done-count">0</div></div>
+      <div class="column-header">
+        <div class="column-title"><div class="col-dot done"></div>완료</div>
+        <div class="done-header-actions">
+          <div class="col-count" id="col-done-count">0</div>
+          <button class="btn-clear-done" onclick="openHistoryModal()">📋 전체 완료내역 보기</button>
+        </div>
+      </div>
       <div class="task-list" id="col-done"></div>
     </div>
   </div>
@@ -200,9 +241,9 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
     <div class="form-row">
       <div class="form-group"><label class="form-label">담당자 *</label>
         <select class="form-select" id="taskAssignee">
-          <option value="나">👑 나 (대표)</option>
-          <option value="직원1">직원 1</option>
-          <option value="직원2">직원 2</option>
+          <option value="이동영">👑 이동영 (대표)</option>
+          <option value="임동석">임동석</option>
+          <option value="조세은">조세은</option>
         </select>
       </div>
       <div class="form-group"><label class="form-label">우선순위</label>
@@ -228,15 +269,34 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
   </div>
 </div>
 
+<!-- History Modal -->
+<div class="modal-overlay" id="historyModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title">📋 완료 업무 내역</div>
+      <button class="modal-close" onclick="closeModal('historyModal')">✕</button>
+    </div>
+    <div class="history-tabs">
+      <button class="history-tab active" onclick="switchHistoryTab('all',this)">전체</button>
+      <button class="history-tab" onclick="switchHistoryTab('이동영',this)">👑 이동영</button>
+      <button class="history-tab" onclick="switchHistoryTab('임동석',this)">임동석</button>
+      <button class="history-tab" onclick="switchHistoryTab('조세은',this)">조세은</button>
+    </div>
+    <div class="history-list" id="historyList"></div>
+    <div class="history-footer">
+      <button class="btn-secondary" onclick="closeModal('historyModal')">닫기</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const SUPABASE_URL = 'https://zbqpfkpsqrknwbfxtwfx.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_OZmmr1rN-7fBbp1P2tFT7w_rR4VK4zC';
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let tasks = [], currentFilter = 'all', addTarget = 'todo', completeTargetId = null;
+let tasks = [], currentFilter = 'all', addTarget = 'todo', completeTargetId = null, historyFilter = 'all';
 
 async function init() {
   const now = new Date();
@@ -276,8 +336,8 @@ function renderBoard() {
 }
 
 function taskCardHTML(t) {
-  const ac = t.assignee==='나'?'avatar-me':t.assignee==='직원1'?'avatar-1':'avatar-2';
-  const al = t.assignee==='나'?'나':t.assignee==='직원1'?'직1':'직2';
+  const ac = t.assignee==='이동영'?'avatar-me':t.assignee==='임동석'?'avatar-1':'avatar-2';
+  const al = t.assignee==='이동영'?'동영':t.assignee==='임동석'?'동석':'세은';
   const pc = {high:'priority-high',mid:'priority-mid',low:'priority-low'}[t.priority]||'priority-mid';
   const pl = {high:'높음',mid:'보통',low:'낮음'}[t.priority]||'보통';
   let actions = '';
@@ -306,7 +366,7 @@ function renderStats() {
 
 function renderCounts() {
   document.getElementById('cnt-all').textContent=tasks.length;
-  ['나','직원1','직원2'].forEach(n=>{const el=document.getElementById(`cnt-${n}`);if(el)el.textContent=tasks.filter(t=>t.assignee===n).length;});
+  ['이동영','임동석','조세은'].forEach(n=>{const el=document.getElementById(`cnt-${n}`);if(el)el.textContent=tasks.filter(t=>t.assignee===n).length;});
 }
 
 function filterMember(m,el) {
@@ -314,6 +374,58 @@ function filterMember(m,el) {
   document.querySelectorAll('.filter-tab').forEach(e=>e.classList.remove('active'));
   el.classList.add('active');
   renderBoard();
+}
+
+// 히스토리 모달
+let historyData = [];
+
+async function openHistoryModal() {
+  historyFilter = 'all';
+  document.querySelectorAll('.history-tab').forEach((t,i)=>{ t.classList.toggle('active', i===0); });
+  const { data } = await db.from('history').select('*').order('created_at', { ascending: false });
+  historyData = data || [];
+  renderHistoryList();
+  document.getElementById('historyModal').classList.add('open');
+}
+
+function switchHistoryTab(filter, el) {
+  historyFilter = filter;
+  document.querySelectorAll('.history-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderHistoryList();
+}
+
+function renderHistoryList() {
+  const filtered = historyFilter === 'all' ? historyData : historyData.filter(t => t.assignee === historyFilter);
+  const container = document.getElementById('historyList');
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="history-empty">완료 내역이 없습니다</div>`;
+    return;
+  }
+  container.innerHTML = filtered.map(t => {
+    const ac = t.assignee==='이동영'?'avatar-me':t.assignee==='임동석'?'avatar-1':'avatar-2';
+    const al = t.assignee==='이동영'?'동영':t.assignee==='임동석'?'동석':'세은';
+    return `<div class="history-item">
+      <div class="history-item-header">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="mini-avatar ${ac}">${al}</div>
+          <div class="history-item-title">${t.title}</div>
+        </div>
+        <div class="history-item-time">${t.completed_at||''}</div>
+      </div>
+      ${t.complete_note?`<div class="history-item-note">📝 ${t.complete_note}</div>`:'<div style="font-size:11px;color:var(--text3);">완료 보고 없음</div>'}
+    </div>`;
+  }).join('');
+}
+
+async function clearDoneTasks() {
+  if (!confirm(`칸반보드의 완료 목록을 초기화할까요?\n✅ 완료 내역은 별도 보관됩니다.`)) return;
+  const ids = tasks.filter(t => t.status === 'done').map(t => t.id);
+  if (ids.length === 0) { showToast('초기화할 항목이 없습니다'); return; }
+  const { error } = await db.from('tasks').delete().in('id', ids);
+  if (error) { showToast('❗ 초기화 실패'); return; }
+  closeModal('historyModal');
+  showToast('✅ 완료 목록 초기화! 내역은 보관됩니다');
 }
 
 function openAddModal(s) {
@@ -348,7 +460,15 @@ function openCompleteModal(id) {
 async function completeTask() {
   const note=document.getElementById('completeNote').value.trim();
   if(!note){showToast('❗ 완료 내용을 입력하세요');return;}
+  const t=tasks.find(t=>String(t.id)===String(completeTargetId));
+  const now=new Date();
+  const completedAt=`${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
   await db.from('tasks').update({status:'done',complete_note:note}).eq('id',completeTargetId);
+  await db.from('history').insert({
+    title:t.title, assignee:t.assignee, priority:t.priority,
+    description:t.description, complete_note:note,
+    task_time:t.task_time, completed_at:completedAt
+  });
   closeModal('completeModal');showToast('🎉 완료 보고 제출!');
 }
 
